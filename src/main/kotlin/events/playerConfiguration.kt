@@ -15,7 +15,7 @@ class playerConfiguration (private val eventHandler: GlobalEventHandler, private
             player.respawnPoint = respawnPosition
             if (player.uuid == UUID.fromString("93e00cfa-893d-46ba-8248-d8fcefc9327e") || player.uuid == UUID.fromString("4f61c127-a842-4eb3-9094-133fefd1a09b")) {
                 player.permissionLevel = 4
-                print(player.username + " has been auto opped")
+                println(player.username + " has been auto opped")
             }
         }
     }

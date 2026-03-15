@@ -1,11 +1,7 @@
 package me.totxy
 
 import me.totxy.Weapons.ARHandler
-import me.totxy.events.playerLoaded
-import me.totxy.events.gamemodeSwitcher
-import me.totxy.events.playerConfiguration
-import me.totxy.events.playerDisconnect
-import me.totxy.events.tickEvent
+import me.totxy.events.*
 import me.totxy.health.HealthManagement
 import net.minestom.server.Auth.Online
 import net.minestom.server.MinecraftServer
@@ -16,7 +12,10 @@ import net.minestom.server.instance.block.Block
 import net.minestom.server.instance.generator.GenerationUnit
 import net.minestom.server.instance.generator.Generator
 import net.minestom.server.utils.chunk.ChunkSupplier
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
+@OptIn(ExperimentalAtomicApi::class)
 fun main() {
     //init
     val minecraftServer = MinecraftServer.init(Online())
@@ -72,6 +71,22 @@ fun main() {
     gamemodeSwitcher().register(globalEventHandler)
     //Leave Event
     playerDisconnect().register(globalEventHandler)
+
+    /*
+    Server off save
+     */
+    val scheduler = MinecraftServer.getSchedulerManager()
+    scheduler.buildShutdownTask(Runnable {
+        MinecraftServer.getConnectionManager().shutdown()
+        try {
+            instanceContainer.saveChunksToStorage()
+            println("World Saved!")
+            Thread.sleep(500)
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+        println("The server is shutting down!")
+    })
 
     minecraftServer.start("0.0.0.0", 25565)
 }
