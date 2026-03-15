@@ -4,6 +4,7 @@ import me.totxy.Weapons.ARHandler
 import me.totxy.events.playerLoaded
 import me.totxy.events.gamemodeSwitcher
 import me.totxy.events.playerConfiguration
+import me.totxy.events.playerDisconnect
 import me.totxy.events.tickEvent
 import me.totxy.health.HealthManagement
 import net.minestom.server.Auth.Online
@@ -69,6 +70,8 @@ fun main() {
     ARHandler().register(globalEventHandler, instanceContainer)
     //Gamemode Switcher (F3+F4)
     gamemodeSwitcher().register(globalEventHandler)
+    //Leave Event
+    playerDisconnect().register(globalEventHandler)
 
     minecraftServer.start("0.0.0.0", 25565)
 }

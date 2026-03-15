@@ -4,6 +4,7 @@ import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.title.Title
+import net.minestom.server.MinecraftServer
 import net.minestom.server.entity.Player
 import net.minestom.server.potion.Potion
 import net.minestom.server.potion.PotionEffect
@@ -54,6 +55,9 @@ class HealthManagement {
         }
         if (health != null) {
             if (health <= 0) {
+                MinecraftServer.getConnectionManager().onlinePlayers.forEach { person ->
+                    person.sendMessage(Component.text(player.username + " has been shot to death!"))
+                }
                 player.respawn()
                 player.showTitle(
                     Title.title(

@@ -1,6 +1,9 @@
 package me.totxy.events
 
 import me.totxy.health.HealthManagement
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.minestom.server.MinecraftServer
 import net.minestom.server.event.GlobalEventHandler
 import net.minestom.server.event.player.PlayerLoadedEvent
 
@@ -11,6 +14,9 @@ class playerLoaded(private val eventHandler: GlobalEventHandler, private val hea
             healthManagement.addHealthBar(player)
             healthManagement.getHealthBar(player)?.let { player.showBossBar(it) }
             healthManagement.getShieldBar(player)?.let { player.showBossBar(it) }
+            MinecraftServer.getConnectionManager().onlinePlayers.forEach{ person ->
+                person.sendMessage(Component.text(player.username + " has joined the server!").color(NamedTextColor.YELLOW))
+            }
         }
     }
 }

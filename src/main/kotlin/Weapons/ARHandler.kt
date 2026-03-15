@@ -41,7 +41,7 @@ class ARHandler {
                     break
                 } else if (hit !== player) {
                     hit.playSound(Sound.sound(SoundEvent.ENTITY_FIREWORK_ROCKET_BLAST, Sound.Source.PLAYER, .25f, 1f))
-                    HealthManagement().damage(hit, 25)
+                    HealthManagement().damage(hit, 12)
                     hit.damage(DamageType.ARROW, .0001f)
                     hit.heal()
 
