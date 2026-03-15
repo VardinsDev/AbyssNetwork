@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "2.2.20"
+    kotlin("jvm") version "2.3.10"
 }
 
 group = "me.totxy"
@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    implementation("net.minestom:minestom:2026.03.03-1.21.11")
 }
 
 tasks.test {
