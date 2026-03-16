@@ -71,6 +71,10 @@ fun main() {
     gamemodeSwitcher().register(globalEventHandler)
     //Leave Event
     playerDisconnect().register(globalEventHandler)
+    //MPSTMonitor
+    MSPTMonitor().register(globalEventHandler)
+    //PickBLock
+    pickBlock().register(globalEventHandler)
 
     /*
     Server off save
