@@ -1,6 +1,8 @@
 package me.totxy.events
 
 import me.totxy.health.HealthManagement
+import net.kyori.adventure.bossbar.BossBar
+import net.kyori.adventure.text.Component
 import net.minestom.server.MinecraftServer
 import net.minestom.server.event.GlobalEventHandler
 import net.minestom.server.event.player.PlayerTickEvent

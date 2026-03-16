@@ -17,16 +17,17 @@ class pickBlock {
             if (event.player.gameMode == GameMode.CREATIVE) {
                 val block = event.block
                 val item = blockToItemStack(block, 1)
-                event.player.setItemInMainHand(item)
+                event.player.itemInMainHand = item
             }
         }
     }
+    fun blockToItemStack(block: Block, amount: Int): ItemStack {
+        return ItemStack.of(block.registry()!!.material(), amount)
+    }
+    fun blockToItemStack(block: Block): ItemStack {
+        return blockToItemStack(block, 1)
+    }
 }
 
-fun blockToItemStack(block: Block, amount: Int): ItemStack {
-    return ItemStack.of(block.registry()!!.material(), amount)
-}
 
-fun blockToItemStack(block: Block): ItemStack {
-    return blockToItemStack(block, 1)
-}
+

@@ -1,5 +1,6 @@
 package me.totxy.events
 
+import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.resource.ResourcePackInfo
 import net.kyori.adventure.resource.ResourcePackRequest
 import net.kyori.adventure.text.Component
