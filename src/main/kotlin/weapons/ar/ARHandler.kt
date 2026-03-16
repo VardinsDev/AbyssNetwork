@@ -1,4 +1,4 @@
-package me.totxy.Weapons
+package me.totxy.weapons.ar
 
 import me.totxy.events.playerConfiguration
 import me.totxy.health.HealthManagement
@@ -38,8 +38,8 @@ class ARHandler {
                 if (instanceContainer.getBlock(blockPos) != Block.AIR) {
                     break
                 } else if (hit != player) {
-                    val playerTagValue = player.getTag(playerConfiguration.TEAM_TAG)
-                    val hitTagValue = hit.getTag(playerConfiguration.TEAM_TAG)
+                    val playerTagValue = player.getTag(playerConfiguration.Companion.TEAM_TAG)
+                    val hitTagValue = hit.getTag(playerConfiguration.Companion.TEAM_TAG)
 
                     if (playerTagValue == null || hitTagValue == null) {
                         println("Tag null — player: $playerTagValue, hit: $hitTagValue")

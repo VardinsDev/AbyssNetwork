@@ -1,8 +1,9 @@
 package me.totxy
 
-import me.totxy.Weapons.ARHandler
+import me.totxy.weapons.ar.ARHandler
 import me.totxy.events.*
 import me.totxy.health.HealthManagement
+import me.totxy.weapons.rocketlauncher.rocketLauncherHandler
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minestom.server.Auth.Online
 import net.minestom.server.MinecraftServer
@@ -77,6 +78,8 @@ fun main() {
     tickEvent(minecraftServer, globalEventHandler, healthManagement).register()
     //AR
     ARHandler().register(globalEventHandler, instanceContainer)
+    //Rocket Launcher
+    rocketLauncherHandler().register(globalEventHandler, instanceContainer)
     //Gamemode Switcher (F3+F4)
     gamemodeSwitcher().register(globalEventHandler)
     //Leave Event
