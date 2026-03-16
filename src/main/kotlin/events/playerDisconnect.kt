@@ -12,6 +12,7 @@ class playerDisconnect {
         eventHandler.addListener(PlayerDisconnectEvent::class.java) {event ->
             MinecraftServer.getConnectionManager().onlinePlayers.forEach { person ->
                 person.sendMessage(Component.text(event.player.username + " has left the server!").color(NamedTextColor.YELLOW))
+
             }
         }
     }
