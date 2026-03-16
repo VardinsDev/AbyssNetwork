@@ -31,7 +31,7 @@ class ARHandler {
             val shield = Tag.Double("shield")
 
             var i = 1.0
-            while (i <= 1000000000) {
+            while (i <= 100) {
                 val point = eyePos.asVec().add(direction.mul(i))
                 val exactPos = point.asPos()
                 val blockPos = Pos(floor(point.x()), floor(point.y()), floor(point.z()))
