@@ -5,6 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.minestom.server.MinecraftServer
 import net.minestom.server.event.GlobalEventHandler
 import net.minestom.server.event.player.PlayerDisconnectEvent
+import java.util.UUID
 
 class playerDisconnect {
     fun register(eventHandler: GlobalEventHandler) {
