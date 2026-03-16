@@ -12,6 +12,7 @@ import net.minestom.server.instance.block.Block
 import net.minestom.server.instance.generator.GenerationUnit
 import net.minestom.server.instance.generator.Generator
 import net.minestom.server.utils.chunk.ChunkSupplier
+import java.util.Objects.hash
 import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
