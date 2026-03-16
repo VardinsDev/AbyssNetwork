@@ -20,10 +20,18 @@ import net.minestom.server.timer.TaskSchedule
 import kotlin.math.floor
 
 class ARHandler {
+    private val cooldownMs = 25L // change this to adjust cooldown in milliseconds
+    private val lastShotTime = HashMap<java.util.UUID, Long>()
+
     fun register(eventHandler: GlobalEventHandler, instanceContainer: InstanceContainer) {
         eventHandler.addListener(PlayerUseItemEvent::class.java) { event ->
             val player = event.player
             if (player.itemInMainHand.material() != Material.WOODEN_HOE) return@addListener
+
+            val now = System.currentTimeMillis()
+            val last = lastShotTime[player.uuid] ?: 0L
+            if (now - last < cooldownMs) return@addListener
+            lastShotTime[player.uuid] = now
 
             val eyePos = player.position.add(0.0, player.eyeHeight, 0.0)
             val direction = player.position.direction()
@@ -38,22 +46,16 @@ class ARHandler {
                 if (instanceContainer.getBlock(blockPos) != Block.AIR) {
                     break
                 } else if (hit != player) {
-                    val playerTagValue = player.getTag(playerConfiguration.Companion.TEAM_TAG)
-                    val hitTagValue = hit.getTag(playerConfiguration.Companion.TEAM_TAG)
+                    val playerTagValue = player.getTag(playerConfiguration.TEAM_TAG)
+                    val hitTagValue = hit.getTag(playerConfiguration.TEAM_TAG)
 
                     if (playerTagValue == null || hitTagValue == null) {
                         println("Tag null — player: $playerTagValue, hit: $hitTagValue")
                     } else if (playerTagValue == hitTagValue) {
-                        // Same team — show particles only
                         player.instance?.sendGroupedPacket(
-                            ParticlePacket(
-                                Particle.CRIT,
-                                point.x(), point.y(), point.z(),
-                                0f, 0f, 0f, 0f, 1
-                            )
+                            ParticlePacket(Particle.CRIT, point.x(), point.y(), point.z(), 0f, 0f, 0f, 0f, 1)
                         )
                     } else {
-                        // Different team — deal damage
                         hit.playSound(Sound.sound(SoundEvent.ENTITY_FIREWORK_ROCKET_BLAST, Sound.Source.PLAYER, .25f, 1f))
                         HealthManagement().damage(hit, 12)
                         hit.damage(DamageType.ARROW, .0001f)
@@ -68,11 +70,7 @@ class ARHandler {
                     }
                 } else {
                     player.instance?.sendGroupedPacket(
-                        ParticlePacket(
-                            Particle.CRIT,
-                            point.x(), point.y(), point.z(),
-                            0f, 0f, 0f, 0f, 1
-                        )
+                        ParticlePacket(Particle.CRIT, point.x(), point.y(), point.z(), 0f, 0f, 0f, 0f, 1)
                     )
                 }
                 i += 0.5
