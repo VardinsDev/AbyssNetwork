@@ -1,8 +1,10 @@
 package me.totxy
 
-import me.totxy.Weapons.ARHandler
+import me.totxy.weapons.ar.ARHandler
 import me.totxy.events.*
 import me.totxy.health.HealthManagement
+import me.totxy.weapons.rocketlauncher.rocketLauncherHandler
+import net.kyori.adventure.text.format.NamedTextColor
 import net.minestom.server.Auth.Online
 import net.minestom.server.MinecraftServer
 import net.minestom.server.instance.Instance
@@ -58,6 +60,14 @@ fun main() {
     // Load/generate the chunk
     instanceContainer.loadChunk(0, 0).join()
 
+    val teamManager = MinecraftServer.getTeamManager()
+    val redTeam = teamManager.createBuilder("glow_red")
+        .teamColor(NamedTextColor.RED)
+        .build()
+    val blueTeam = teamManager.createBuilder("glow_blue")
+        .teamColor(NamedTextColor.BLUE)
+        .build()
+
     //Join
     val globalEventHandler = MinecraftServer.getGlobalEventHandler()
     //PlayerConfigurationEvent
@@ -68,6 +78,8 @@ fun main() {
     tickEvent(minecraftServer, globalEventHandler, healthManagement).register()
     //AR
     ARHandler().register(globalEventHandler, instanceContainer)
+    //Rocket Launcher
+    rocketLauncherHandler().register(globalEventHandler, instanceContainer)
     //Gamemode Switcher (F3+F4)
     gamemodeSwitcher().register(globalEventHandler)
     //Leave Event

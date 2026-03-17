@@ -5,6 +5,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.title.Title
 import net.minestom.server.MinecraftServer
+import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.Player
 import net.minestom.server.potion.Potion
 import net.minestom.server.potion.PotionEffect
@@ -83,6 +84,7 @@ class HealthManagement {
     fun updateBars(person: Player) {
         val healthBar = healthBars[person.uuid] ?: return
         val shieldBar = shieldBars[person.uuid] ?: return
+        val teamTag: Tag<Boolean?>? = Tag.Boolean("teamTag")
 
         if (person.getTag(healthTag) == null) person.setTag(healthTag, 100.0)
         if (person.getTag(shieldTag) == null) person.setTag(shieldTag, 0.0)
@@ -98,6 +100,11 @@ class HealthManagement {
         if (playerHealth <= 0) {
             person.setTag(healthTag, 100.0)
             person.setTag(shieldTag, 0.0)
+            if (person.getTag(teamTag) == true) {
+                person.respawnPoint = Pos(-77.5, 34.0, -35.5)
+            } else if (person.getTag(teamTag) == false) {
+                person.respawnPoint = Pos(-18.5, 34.0, 13.5)
+            }
             person.teleport(person.respawnPoint)
             person.showTitle(
                 Title.title(

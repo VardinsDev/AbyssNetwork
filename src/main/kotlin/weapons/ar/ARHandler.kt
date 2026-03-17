@@ -1,5 +1,6 @@
-package me.totxy.Weapons
+package me.totxy.weapons.ar
 
+import me.totxy.events.playerConfiguration
 import me.totxy.health.HealthManagement
 import net.kyori.adventure.sound.Sound
 import net.minestom.server.MinecraftServer
@@ -15,20 +16,25 @@ import net.minestom.server.item.Material
 import net.minestom.server.network.packet.server.play.ParticlePacket
 import net.minestom.server.particle.Particle
 import net.minestom.server.sound.SoundEvent
-import net.minestom.server.tag.Tag
 import net.minestom.server.timer.TaskSchedule
 import kotlin.math.floor
 
 class ARHandler {
+    private val cooldownMs = 25L // change this to adjust cooldown in milliseconds
+    private val lastShotTime = HashMap<java.util.UUID, Long>()
+
     fun register(eventHandler: GlobalEventHandler, instanceContainer: InstanceContainer) {
         eventHandler.addListener(PlayerUseItemEvent::class.java) { event ->
             val player = event.player
             if (player.itemInMainHand.material() != Material.WOODEN_HOE) return@addListener
 
+            val now = System.currentTimeMillis()
+            val last = lastShotTime[player.uuid] ?: 0L
+            if (now - last < cooldownMs) return@addListener
+            lastShotTime[player.uuid] = now
+
             val eyePos = player.position.add(0.0, player.eyeHeight, 0.0)
             val direction = player.position.direction()
-            val health = Tag.Double("health")
-            val shield = Tag.Double("shield")
 
             var i = 1.0
             while (i <= 100) {
@@ -37,29 +43,34 @@ class ARHandler {
                 val blockPos = Pos(floor(point.x()), floor(point.y()), floor(point.z()))
                 val hit = isPlayerAtPosition(instanceContainer, exactPos, player)
 
-                if (instanceContainer.getBlock(blockPos) !== Block.AIR) {
+                if (instanceContainer.getBlock(blockPos) != Block.AIR) {
                     break
-                } else if (hit !== player) {
-                    hit.playSound(Sound.sound(SoundEvent.ENTITY_FIREWORK_ROCKET_BLAST, Sound.Source.PLAYER, .25f, 1f))
-                    HealthManagement().damage(hit, 12)
-                    hit.damage(DamageType.ARROW, .0001f)
-                    hit.heal()
+                } else if (hit != player) {
+                    val playerTagValue = player.getTag(playerConfiguration.TEAM_TAG)
+                    val hitTagValue = hit.getTag(playerConfiguration.TEAM_TAG)
 
-                    MinecraftServer.getSchedulerManager().buildTask {
-                        player.playSound(Sound.sound(SoundEvent.ENTITY_EXPERIENCE_ORB_PICKUP, Sound.Source.PLAYER, 1f, 1f))
-                        hit.playSound(Sound.sound(SoundEvent.ENTITY_GENERIC_HURT, Sound.Source.PLAYER, .25f, 1f))
-                    }.delay(TaskSchedule.tick(3)).schedule()
+                    if (playerTagValue == null || hitTagValue == null) {
+                        println("Tag null — player: $playerTagValue, hit: $hitTagValue")
+                    } else if (playerTagValue == hitTagValue) {
+                        player.instance?.sendGroupedPacket(
+                            ParticlePacket(Particle.CRIT, point.x(), point.y(), point.z(), 0f, 0f, 0f, 0f, 1)
+                        )
+                    } else {
+                        hit.playSound(Sound.sound(SoundEvent.ENTITY_FIREWORK_ROCKET_BLAST, Sound.Source.PLAYER, .25f, 1f))
+                        HealthManagement().damage(hit, 12)
+                        hit.damage(DamageType.ARROW, .0001f)
+                        hit.heal()
 
-                    break
+                        MinecraftServer.getSchedulerManager().buildTask {
+                            player.playSound(Sound.sound(SoundEvent.ENTITY_EXPERIENCE_ORB_PICKUP, Sound.Source.PLAYER, 1f, 1f))
+                            hit.playSound(Sound.sound(SoundEvent.ENTITY_GENERIC_HURT, Sound.Source.PLAYER, .25f, 1f))
+                        }.delay(TaskSchedule.tick(3)).schedule()
+
+                        break
+                    }
                 } else {
                     player.instance?.sendGroupedPacket(
-                        ParticlePacket(
-                            Particle.CRIT,
-                            point.x(), point.y(), point.z(),
-                            0f, 0f, 0f,
-                            0f,
-                            1
-                        )
+                        ParticlePacket(Particle.CRIT, point.x(), point.y(), point.z(), 0f, 0f, 0f, 0f, 1)
                     )
                 }
                 i += 0.5
@@ -76,9 +87,7 @@ class ARHandler {
             var y = 0.0
             while (y <= height) {
                 val checkPos = feetPos.add(0.0, y, 0.0)
-                if (targetPos.distanceSquared(checkPos) <= 0.5 * 0.5) {
-                    return player
-                }
+                if (targetPos.distanceSquared(checkPos) <= 0.5 * 0.5) return player
                 y += 0.3
             }
         }
