@@ -46,6 +46,12 @@ import rocks.minestom.placement.WallPlacementRule
 import rocks.minestom.placement.WallSignPlacementRule
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import io.github.cdimascio.dotenv.dotenv
+import net.hollowcube.polar.AnvilPolar
+import net.hollowcube.polar.PolarLoader
+import net.hollowcube.polar.PolarWriter
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.StandardOpenOption
 
 private fun registerPlacementRules() {
     Utility.registerPlacementRules(
@@ -183,25 +189,14 @@ fun main() {
 
 
     //World defining
-    instanceContainer.chunkLoader = AnvilLoader("worlds/world")
-    instanceContainer.setGenerator(Generator setGenerator@{ unit: GenerationUnit? ->
-        // World coordinates of this generation area
-        val startX = unit!!.absoluteStart().blockX()
-        val startZ = unit.absoluteStart().blockZ()
-        val endX = unit.absoluteEnd().blockX() - 1 // inclusive
-        val endZ = unit.absoluteEnd().blockZ() - 1 // inclusive
+    var polarWorld = AnvilPolar.anvilToPolar(Path.of("worlds/world"));
+    AbyssLogger.success("debug 1:")
+    var polarWorldBytes= PolarWriter.write(polarWorld);
+    AbyssLogger.success("debug 2:")
+    Files.write(Path.of("world/world.polar"), polarWorldBytes, StandardOpenOption.CREATE)
+    AbyssLogger.success("debug 3:")
+    instanceContainer.chunkLoader = PolarLoader(Path.of("world/world.polar"));
 
-        // Only generate when this area overlaps chunk (0,0)
-        // Chunk 0,0 world X range = 0 to 15
-        // Chunk 0,0 world Z range = 0 to 15
-        if (endX < 0 || startX > 15 || endZ < 0 || startZ > 15) {
-            return@setGenerator  // this area is completely outside chunk 0,0
-        }
-        unit.modifier().fillHeight(33, 34, Block.STONE)
-    })
-    
-    // Load/generate the chunk
-    instanceContainer.loadChunk(0, 0).join()
     AbyssLogger.success("Chunks Loaded!")
 
     val teamManager = MinecraftServer.getTeamManager()

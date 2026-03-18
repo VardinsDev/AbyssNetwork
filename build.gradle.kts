@@ -22,6 +22,7 @@ dependencies {
     implementation("org.slf4j:slf4j-simple:2.0.13")
     implementation("rocks.minestom:placement:0.1.0")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+    implementation("dev.hollowcube:polar:1.15.0")
 }
 
 application {
