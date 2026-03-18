@@ -1,6 +1,7 @@
 package me.totxy
 
 import me.totxy.commands.peaceTimeCommand
+import me.totxy.database.DatabaseManager
 import me.totxy.weapons.ar.ARHandler
 import me.totxy.events.*
 import me.totxy.health.HealthManagement
@@ -22,6 +23,17 @@ import kotlin.concurrent.atomics.ExperimentalAtomicApi
 @OptIn(ExperimentalAtomicApi::class)
 fun main() {
     //init
+    AbyssLogger.printBanner()
+    AbyssLogger.info("Starting Abyss Network...")
+
+    DatabaseManager.connect(
+        host = "centerbeam.proxy.rlwy.net",  // just the hostname, no mysql:// prefix
+        port = 23115,                         // the public port goes here, not 3306
+        database = "railway",
+        user = "root",
+        password = "UIKsItEqJhgfRUnGcgrGzRxrLURPmPrg"
+    )
+
     val minecraftServer = MinecraftServer.init(Online())
 
     //Instance
@@ -69,6 +81,8 @@ fun main() {
     val manager = MinecraftServer.getCommandManager()
     manager.register(peaceTimeCommand())
 
+    AbyssLogger.success("Server started on port 25565")
+
     //Join
     val globalEventHandler = MinecraftServer.getGlobalEventHandler()
     //PlayerConfigurationEvent
@@ -95,15 +109,16 @@ fun main() {
      */
     val scheduler = MinecraftServer.getSchedulerManager()
     scheduler.buildShutdownTask(Runnable {
+        DatabaseManager.disconnect()
         MinecraftServer.getConnectionManager().shutdown()
         try {
             instanceContainer.saveChunksToStorage()
-            println("World Saved!")
+            AbyssLogger.info("World Saved!")
             Thread.sleep(500)
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
-        println("The server is shutting down!")
+        AbyssLogger.warn("The server is shutting down!")
     })
 
     minecraftServer.start("0.0.0.0", 25565)

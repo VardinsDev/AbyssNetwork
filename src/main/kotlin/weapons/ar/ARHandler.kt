@@ -1,5 +1,6 @@
 package me.totxy.weapons.ar
 
+import me.totxy.AbyssLogger
 import me.totxy.events.playerConfiguration
 import me.totxy.health.HealthManagement
 import me.totxy.weapons.PeaceTime.Companion.isActive
@@ -57,7 +58,7 @@ class ARHandler {
                         val hitTagValue = hit.getTag(playerConfiguration.TEAM_TAG)
 
                         if (playerTagValue == null || hitTagValue == null) {
-                            println("Tag null — player: $playerTagValue, hit: $hitTagValue")
+                            AbyssLogger.error("Tag null — player: $playerTagValue, hit: $hitTagValue")
                         } else if (playerTagValue == hitTagValue) {
                             player.instance?.sendGroupedPacket(
                                 ParticlePacket(Particle.CRIT, point.x(), point.y(), point.z(), 0f, 0f, 0f, 0f, 1)
