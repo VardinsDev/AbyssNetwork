@@ -5,7 +5,7 @@ import me.totxy.database.DatabaseManager
 import me.totxy.events.*
 import me.totxy.health.HealthManagement
 import me.totxy.weapons.ar.ARHandler
-import me.totxy.weapons.rocketlauncher.rocketLauncherHandler
+import me.totxy.weapons.rocketlauncher.RocketLauncherHandler
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.format.NamedTextColor
 import net.minestom.server.Auth.Online
@@ -228,7 +228,7 @@ fun main() {
     //AR
     ARHandler().register(globalEventHandler, instanceContainer)
     //Rocket Launcher
-    rocketLauncherHandler().register(globalEventHandler, instanceContainer)
+    RocketLauncherHandler().register(globalEventHandler, instanceContainer)
     //Gamemode Switcher (F3+F4)
     gamemodeSwitcher().register(globalEventHandler)
     //Leave Event

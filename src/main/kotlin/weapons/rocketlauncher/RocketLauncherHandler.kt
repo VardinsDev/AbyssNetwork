@@ -27,7 +27,7 @@ import net.minestom.server.timer.TaskSchedule
 import kotlin.math.floor
 import kotlin.math.sqrt
 
-class rocketLauncherHandler {
+class RocketLauncherHandler {
     fun register(eventHandler: GlobalEventHandler, instanceContainer: InstanceContainer) {
         var lastShotTime = 0L
         val cooldownSeconds = 10

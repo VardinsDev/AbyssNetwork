@@ -1,5 +1,6 @@
 
 plugins {
+    id("io.github.goooler.shadow") version "8.1.8"
     kotlin("jvm") version "2.3.10"
     application
 }
@@ -34,4 +35,10 @@ application {
 
 tasks.test {
     useJUnitPlatform()
+}
+tasks.shadowJar {
+    archiveBaseName.set("AbyssNetwork")
+    archiveClassifier.set("")
+    archiveVersion.set("1.0.0")
+    mergeServiceFiles()
 }
