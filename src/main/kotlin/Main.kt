@@ -27,11 +27,11 @@ fun main() {
     AbyssLogger.info("Starting Abyss Network...")
 
     DatabaseManager.connect(
-        host = "centerbeam.proxy.rlwy.net",  // just the hostname, no mysql:// prefix
-        port = 23115,                         // the public port goes here, not 3306
-        database = "railway",
+        host = "0.tcp.ngrok.io",  // just the hostname, no mysql:// prefix
+        port = 12108,                         // the public port goes here, not 3306
+        database = "abyssnetwork",
         user = "root",
-        password = "UIKsItEqJhgfRUnGcgrGzRxrLURPmPrg"
+        password = "REDACTED!"
     )
 
     val minecraftServer = MinecraftServer.init(Online())

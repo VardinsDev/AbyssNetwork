@@ -5,6 +5,8 @@ import me.totxy.database.PlayerRepository
 import net.kyori.adventure.resource.ResourcePackInfo
 import net.kyori.adventure.resource.ResourcePackRequest
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextDecoration
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.event.GlobalEventHandler
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent
@@ -48,6 +50,7 @@ class playerConfiguration(private val eventHandler: GlobalEventHandler, private 
 
             if (data.isOpped) {
                 player.permissionLevel = 4
+                player.sendMessage(Component.text("Abyss | You have been opped!").color(NamedTextColor.DARK_PURPLE).decorate(TextDecoration.BOLD))
                 AbyssLogger.success("${player.username} has been auto opped")
             }
         }
