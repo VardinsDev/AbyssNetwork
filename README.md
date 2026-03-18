@@ -7,7 +7,8 @@
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.3.10-1e1e2e?style=for-the-badge&logo=kotlin&logoColor=cba6f7)](https://kotlinlang.org)
 [![Minestom](https://img.shields.io/badge/Minestom-2026.03.03-1e1e2e?style=for-the-badge&logo=minecraft&logoColor=a6e3a1)](https://minestom.net)
 [![JVM](https://img.shields.io/badge/JVM-25-1e1e2e?style=for-the-badge&logo=openjdk&logoColor=fab387)](https://openjdk.org)
-[![MySQL](https://img.shields.io/badge/MySQL-9.2.0-1e1e2e?style=for-the-badge&logo=mysql&logoColor=89b4fa)](https://mysql.com)
+[![MariaDB](https://img.shields.io/badge/MariaDB-1e1e2e?style=for-the-badge&logo=mariadb&logoColor=89b4fa)](https://mariadb.org)
+[![License](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-1e1e2e?style=for-the-badge&logoColor=f38ba8)](LICENSE)
 
 </div>
 
@@ -19,7 +20,7 @@
 
 > Minestom is not a plugin platform — it is a library. There is no vanilla behaviour unless you implement it yourself.
 
-The server runs in **online mode** with MySQL-backed persistent player data, a custom dual-bar health and shield system, two fully implemented weapons, team-based combat, and a peacetime system for safe building/exploration periods.
+The server runs in **online mode** with MariaDB-backed persistent player data, a custom dual-bar health and shield system, two fully implemented weapons, team-based combat, and a peacetime system for safe building/exploration periods.
 
 ---
 
@@ -29,7 +30,7 @@ The server runs in **online mode** with MySQL-backed persistent player data, a c
 - 🛡️ **Dual Health & Shield System** — Boss bar UI showing separate health and shield values
 - 👥 **Team-Based Combat** — Red and Blue teams with friendly fire prevention
 - ☮️ **Peacetime Mode** — Admin-toggled mode that disables all PvP
-- 🗄️ **MySQL Persistence** — Player stats (kills, deaths, rank, team) saved to database
+- 🗄️ **MariaDB Persistence** — Player stats (kills, deaths, rank, team) saved to database
 - 🌍 **Anvil World Loading** — Real Minecraft region files loaded via `AnvilLoader`
 - 📦 **Full Block Placement Rules** — Stairs, slabs, doors, fences, signs, crops and more all behave correctly
 - 📊 **MSPT Monitoring** — Server tick performance tracking
@@ -46,7 +47,7 @@ me.totxy/
 ├── AbyssLogger.kt                   # Custom coloured console logger
 │
 ├── database/
-│   ├── DatabaseManager.kt           # MySQL connection, table creation, singleton
+│   ├── DatabaseManager.kt           # MariaDB connection, table creation, singleton
 │   ├── PlayerData.kt                # Data class: uuid, username, kills, deaths, team, rank, isOpped
 │   └── PlayerRepository.kt         # CRUD operations for player data
 │
@@ -58,7 +59,7 @@ me.totxy/
 │   ├── ar/
 │   │   └── ARHandler.kt             # Assault rifle: raycast, team check, hit detection, sounds
 │   └── rocketlauncher/
-│       └── RocketLauncherHandler.kt # Rocket: BlockDisplay entity, explosion radius, knockback, cooldown UI
+│       └── rocketLauncherHandler.kt # Rocket: BlockDisplay entity, explosion radius, knockback, cooldown UI
 │
 ├── commands/
 │   └── peacetimeCommand.kt          # /peacetime command to toggle PeaceTime
@@ -160,7 +161,7 @@ Connection uses `autoReconnect=true` to handle dropped connections gracefully. T
 | Dependency | Version | Purpose |
 |---|---|---|
 | `net.minestom:minestom` | `2026.03.03-1.21.11` | Core server framework |
-| `com.mysql:mysql-connector-j` | `9.2.0` | MySQL JDBC driver |
+| `com.mysql:mysql-connector-j` | `9.2.0` | MariaDB/MySQL JDBC driver |
 | `org.slf4j:slf4j-simple` | `2.0.13` | Logging backend |
 | `rocks.minestom:placement` | `0.1.0` | Block placement rules |
 | `io.github.cdimascio:dotenv-kotlin` | `6.4.1` | `.env` config loading |
@@ -172,56 +173,25 @@ Connection uses `autoReconnect=true` to handle dropped connections gracefully. T
 
 ## 🚀 Getting Started
 
-### Prerequisites
+See [CONTRIBUTING.md](CONTRIBUTING.md) for a full dev environment setup guide.
 
-- Java 25+
-- MySQL server
-- Git
-
-### 1. Clone
+### Quick Start
 
 ```bash
 git clone https://github.com/VardinsDev/AbyssNetwork.git
 cd AbyssNetwork
-```
-
-### 2. Configure Environment
-
-Create a `.env` file in the project root:
-
-```env
-DB_HOST=localhost
-DB_PORT=3306
-DB_NAME=abyssnetwork
-DB_USER=your_user
-DB_PASSWORD=your_password
-```
-
-### 3. Set Up the Database
-
-```sql
-CREATE DATABASE abyssnetwork;
-```
-
-The `players` table is created automatically on first startup.
-
-### 4. Build & Run
-
-```bash
+cp .env.example .env   # fill in your DB credentials
 ./gradlew run
 ```
 
-Or build a JAR first:
+Or download the latest prebuilt JAR from [Releases](https://github.com/VardinsDev/AbyssNetwork/releases) and run:
 
 ```bash
-./gradlew build
 java --add-opens=java.base/java.lang=ALL-UNNAMED \
      -XX:+EnableDynamicAgentLoading \
      -Djdk.reflect.useDirectMethodHandle=false \
-     -jar build/libs/AbyssNetwork-1.0-SNAPSHOT.jar
+     -jar AbyssNetwork.jar
 ```
-
-The server starts on `0.0.0.0:25565`.
 
 ---
 
@@ -233,25 +203,22 @@ AbyssNetwork/
 ├── worlds/world/region/   # Minecraft Anvil region files (.mca)
 ├── build.gradle.kts       # Dependencies and build config
 ├── gradle.properties      # Gradle properties
-├── .env                   # Environment config (not committed)
-└── .gitignore
+├── .env.example           # Example environment config
+├── .env                   # Your environment config (not committed)
+└── LICENSE
 ```
 
 ---
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/my-feature`
-3. Commit: `git commit -m "add my feature"`
-4. Push: `git push origin feature/my-feature`
-5. Open a Pull Request
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under **CC BY-NC-ND 4.0** — you may share and redistribute it with attribution, but commercial use and distribution of modified versions are not permitted. See [LICENSE](LICENSE) for full details.
 
 ---
 
