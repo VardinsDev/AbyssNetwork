@@ -45,7 +45,7 @@ import rocks.minestom.placement.WallHangingSignPlacementRule
 import rocks.minestom.placement.WallPlacementRule
 import rocks.minestom.placement.WallSignPlacementRule
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
-
+import io.github.cdimascio.dotenv.dotenv
 
 private fun registerPlacementRules() {
     Utility.registerPlacementRules(
@@ -153,12 +153,15 @@ fun main() {
     AbyssLogger.printBanner()
     AbyssLogger.info("Starting Abyss Network...")
 
+
+    val env = dotenv()
+
     DatabaseManager.connect(
-        host = "0.tcp.ngrok.io",  // just the hostname, no mysql:// prefix
-        port = 12108,                         // the public port goes here, not 3306
-        database = "abyssnetwork",
-        user = "root",
-        password = "REDACTED!"
+        host = env["DB_HOST"],
+        port = env["DB_PORT"].toInt(),
+        database = env["DB_NAME"],
+        user = env["DB_USER"],
+        password = env["DB_PASSWORD"]
     )
 
     val minecraftServer = MinecraftServer.init(Online())

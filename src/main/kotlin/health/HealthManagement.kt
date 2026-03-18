@@ -100,11 +100,6 @@ class HealthManagement {
         if (playerHealth <= 0) {
             person.setTag(healthTag, 100.0)
             person.setTag(shieldTag, 0.0)
-            if (person.getTag(teamTag) == true) {
-                person.respawnPoint = Pos(-77.5, 34.0, -35.5)
-            } else if (person.getTag(teamTag) == false) {
-                person.respawnPoint = Pos(-18.5, 34.0, 13.5)
-            }
             person.teleport(person.respawnPoint)
             person.showTitle(
                 Title.title(
