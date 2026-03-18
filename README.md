@@ -209,6 +209,11 @@ AbyssNetwork/
 ```
 
 ---
+## 💬 Community
+
+Join the Discord for updates, announcements, and to report issues in real time.
+
+[![Discord](https://img.shields.io/badge/Discord-1e1e2e?style=for-the-badge&logo=discord&logoColor=cba6f7)](https://discord.gg/T9j2k5X2H8)
 
 ## 🤝 Contributing
 
