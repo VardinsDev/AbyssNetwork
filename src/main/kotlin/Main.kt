@@ -189,12 +189,6 @@ fun main() {
 
 
     //World defining
-    var polarWorld = AnvilPolar.anvilToPolar(Path.of("worlds/world"));
-    AbyssLogger.success("debug 1:")
-    var polarWorldBytes= PolarWriter.write(polarWorld);
-    AbyssLogger.success("debug 2:")
-    Files.write(Path.of("world/world.polar"), polarWorldBytes, StandardOpenOption.CREATE)
-    AbyssLogger.success("debug 3:")
     instanceContainer.chunkLoader = PolarLoader(Path.of("world/world.polar"));
 
     AbyssLogger.success("Chunks Loaded!")
