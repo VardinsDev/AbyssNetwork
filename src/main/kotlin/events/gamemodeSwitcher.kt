@@ -11,7 +11,7 @@ class gamemodeSwitcher {
         eventHandler.addListener(PlayerGameModeRequestEvent::class.java) {event ->
             if (event.player.permissionLevel >= 3) {
                 event.player.gameMode = event.requestedGameMode
-                event.player.sendMessage(Component.text("AbyssNetwork | Your gamemode has been set to " + (event.requestedGameMode)).color(NamedTextColor.DARK_PURPLE).decorate(TextDecoration.BOLD))
+                event.player.sendMessage(Component.text("Abyss | Your gamemode has been set to " + (event.requestedGameMode)).color(NamedTextColor.DARK_PURPLE).decorate(TextDecoration.BOLD))
             }
         }
     }
