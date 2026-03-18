@@ -1,9 +1,12 @@
 package me.totxy.weapons.rocketlauncher
 
 import me.totxy.health.HealthManagement
+import me.totxy.weapons.PeaceTime.Companion.isActive
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.text.format.TextDecoration
 import net.minestom.server.MinecraftServer
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.coordinate.Vec
@@ -181,25 +184,32 @@ class rocketLauncherHandler {
             if (target == shooter) continue
             val dist = sqrt(pos.distanceSquared(target.position))
             if (dist <= explosionRadius) {
-                val damage = if (target == directHit) {
-                    80
+                if (isActive) {
+                    shooter.sendMessage(Component.text("Abyss | Peacetime is active! You cannot hurt others!").color(NamedTextColor.DARK_PURPLE).decoration(TextDecoration.BOLD, true))
                 } else {
-                    (40 * (1.0 - dist / explosionRadius)).toInt()
-                }
-                if (damage > 0) {
-                    HealthManagement().damage(target, damage)
-                    target.damage(DamageType.ARROW, 0.0001f)
-                    target.heal()
-                    target.playSound(
-                        Sound.sound(SoundEvent.ENTITY_GENERIC_HURT, Sound.Source.PLAYER, 0.5f, 1f)
-                    )
+                    val damage = if (target == directHit) {
+                        80
+                    } else {
+                        (40 * (1.0 - dist / explosionRadius)).toInt()
+                    }
+                    if (damage > 0) {
+                        HealthManagement().damage(target, damage)
+                        target.damage(DamageType.ARROW, 0.0001f)
+                        target.heal()
+                        target.playSound(
+                            Sound.sound(SoundEvent.ENTITY_GENERIC_HURT, Sound.Source.PLAYER, 0.5f, 1f)
+                        )
+                        target.playSound(
+                            Sound.sound(SoundEvent.ENTITY_GENERIC_EXPLODE, Sound.Source.PLAYER, 0.5f, 1f)
+                        )
 
-                    val knockbackDir = Vec(
-                        target.position.x - pos.x,
-                        target.position.y - pos.y + 0.5,
-                        target.position.z - pos.z
-                    ).normalize().mul(20.0 * (1.0 - dist / explosionRadius))
-                    target.velocity = knockbackDir
+                        val knockbackDir = Vec(
+                            target.position.x - pos.x,
+                            target.position.y - pos.y + 0.5,
+                            target.position.z - pos.z
+                        ).normalize().mul(20.0 * (1.0 - dist / explosionRadius))
+                        target.velocity = knockbackDir
+                    }
                 }
             }
         }

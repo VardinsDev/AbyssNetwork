@@ -1,5 +1,6 @@
 package me.totxy
 
+import me.totxy.commands.peaceTimeCommand
 import me.totxy.weapons.ar.ARHandler
 import me.totxy.events.*
 import me.totxy.health.HealthManagement
@@ -53,10 +54,7 @@ fun main() {
         }
         unit.modifier().fillHeight(33, 34, Block.STONE)
     })
-
-    //Load the chunk
-    //Todo: Get world built
-
+    
     // Load/generate the chunk
     instanceContainer.loadChunk(0, 0).join()
 
@@ -67,6 +65,9 @@ fun main() {
     val blueTeam = teamManager.createBuilder("glow_blue")
         .teamColor(NamedTextColor.BLUE)
         .build()
+
+    val manager = MinecraftServer.getCommandManager()
+    manager.register(peaceTimeCommand())
 
     //Join
     val globalEventHandler = MinecraftServer.getGlobalEventHandler()

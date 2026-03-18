@@ -2,7 +2,11 @@ package me.totxy.weapons.ar
 
 import me.totxy.events.playerConfiguration
 import me.totxy.health.HealthManagement
+import me.totxy.weapons.PeaceTime.Companion.isActive
 import net.kyori.adventure.sound.Sound
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextDecoration
 import net.minestom.server.MinecraftServer
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.Player
@@ -46,27 +50,52 @@ class ARHandler {
                 if (instanceContainer.getBlock(blockPos) != Block.AIR) {
                     break
                 } else if (hit != player) {
-                    val playerTagValue = player.getTag(playerConfiguration.TEAM_TAG)
-                    val hitTagValue = hit.getTag(playerConfiguration.TEAM_TAG)
-
-                    if (playerTagValue == null || hitTagValue == null) {
-                        println("Tag null — player: $playerTagValue, hit: $hitTagValue")
-                    } else if (playerTagValue == hitTagValue) {
-                        player.instance?.sendGroupedPacket(
-                            ParticlePacket(Particle.CRIT, point.x(), point.y(), point.z(), 0f, 0f, 0f, 0f, 1)
-                        )
+                    if (isActive) {
+                        player.sendMessage(Component.text("Abyss | Peacetime is active! You cannot hurt others!").color(NamedTextColor.DARK_PURPLE).decoration(TextDecoration.BOLD, true))
                     } else {
-                        hit.playSound(Sound.sound(SoundEvent.ENTITY_FIREWORK_ROCKET_BLAST, Sound.Source.PLAYER, .25f, 1f))
-                        HealthManagement().damage(hit, 12)
-                        hit.damage(DamageType.ARROW, .0001f)
-                        hit.heal()
+                        val playerTagValue = player.getTag(playerConfiguration.TEAM_TAG)
+                        val hitTagValue = hit.getTag(playerConfiguration.TEAM_TAG)
 
-                        MinecraftServer.getSchedulerManager().buildTask {
-                            player.playSound(Sound.sound(SoundEvent.ENTITY_EXPERIENCE_ORB_PICKUP, Sound.Source.PLAYER, 1f, 1f))
-                            hit.playSound(Sound.sound(SoundEvent.ENTITY_GENERIC_HURT, Sound.Source.PLAYER, .25f, 1f))
-                        }.delay(TaskSchedule.tick(3)).schedule()
+                        if (playerTagValue == null || hitTagValue == null) {
+                            println("Tag null — player: $playerTagValue, hit: $hitTagValue")
+                        } else if (playerTagValue == hitTagValue) {
+                            player.instance?.sendGroupedPacket(
+                                ParticlePacket(Particle.CRIT, point.x(), point.y(), point.z(), 0f, 0f, 0f, 0f, 1)
+                            )
+                        } else {
+                            hit.playSound(
+                                Sound.sound(
+                                    SoundEvent.ENTITY_FIREWORK_ROCKET_BLAST,
+                                    Sound.Source.PLAYER,
+                                    .25f,
+                                    1f
+                                )
+                            )
+                            HealthManagement().damage(hit, 12)
+                            hit.damage(DamageType.ARROW, .0001f)
+                            hit.heal()
 
-                        break
+                            MinecraftServer.getSchedulerManager().buildTask {
+                                player.playSound(
+                                    Sound.sound(
+                                        SoundEvent.ENTITY_EXPERIENCE_ORB_PICKUP,
+                                        Sound.Source.PLAYER,
+                                        1f,
+                                        1f
+                                    )
+                                )
+                                hit.playSound(
+                                    Sound.sound(
+                                        SoundEvent.ENTITY_GENERIC_HURT,
+                                        Sound.Source.PLAYER,
+                                        .25f,
+                                        1f
+                                    )
+                                )
+                            }.delay(TaskSchedule.tick(3)).schedule()
+
+                            break
+                        }
                     }
                 } else {
                     player.instance?.sendGroupedPacket(
