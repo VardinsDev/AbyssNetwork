@@ -36,7 +36,7 @@ object PlayerRepository {
                 kills = ?,
                 deaths = ?,
                 team = ?,
-                rank = ?,
+                player_rank = ?,
                 is_opped = ?
             WHERE uuid = ?
         """)
