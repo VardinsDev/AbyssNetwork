@@ -4,6 +4,7 @@ import me.totxy.health.HealthManagement
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextDecoration
 import net.minestom.server.MinecraftServer
 import net.minestom.server.event.GlobalEventHandler
 import net.minestom.server.event.player.PlayerLoadedEvent
@@ -31,6 +32,9 @@ class playerLoaded(private val eventHandler: GlobalEventHandler, private val hea
                 playerTeam?.addMember(player.username)
                 player.isGlowing = true
             }
+            if (player.permissionLevel > 2) {
+                player.sendMessage(Component.text("Abyss | You have been opped!").color(NamedTextColor.DARK_PURPLE).decorate(TextDecoration.BOLD))
+            }
             val serverBar = BossBar.bossBar(
                 Component.text("You are on DEV SERVER!"),
                 1.0f,
@@ -39,7 +43,7 @@ class playerLoaded(private val eventHandler: GlobalEventHandler, private val hea
             )
             player.showBossBar(serverBar)
             MinecraftServer.getConnectionManager().onlinePlayers.forEach{ person ->
-                person.sendMessage(Component.text(player.username + " has joined the server!").color(NamedTextColor.YELLOW))
+                person.sendMessage(Component.text("Abyss | " + event.player.username + " has joined the server!").color(NamedTextColor.DARK_PURPLE).decorate(TextDecoration.BOLD))
             }
         }
     }

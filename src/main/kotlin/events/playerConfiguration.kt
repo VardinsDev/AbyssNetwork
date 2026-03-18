@@ -50,7 +50,6 @@ class playerConfiguration(private val eventHandler: GlobalEventHandler, private 
 
             if (data.isOpped) {
                 player.permissionLevel = 4
-                player.sendMessage(Component.text("Abyss | You have been opped!").color(NamedTextColor.DARK_PURPLE).decorate(TextDecoration.BOLD))
                 AbyssLogger.success("${player.username} has been auto opped")
             }
         }

@@ -69,6 +69,7 @@ fun main() {
     
     // Load/generate the chunk
     instanceContainer.loadChunk(0, 0).join()
+    AbyssLogger.success("Chunks Loaded!")
 
     val teamManager = MinecraftServer.getTeamManager()
     val redTeam = teamManager.createBuilder("glow_red")
@@ -80,8 +81,6 @@ fun main() {
 
     val manager = MinecraftServer.getCommandManager()
     manager.register(peaceTimeCommand())
-
-    AbyssLogger.success("Server started on port 25565")
 
     //Join
     val globalEventHandler = MinecraftServer.getGlobalEventHandler()
@@ -122,4 +121,5 @@ fun main() {
     })
 
     minecraftServer.start("0.0.0.0", 25565)
+    AbyssLogger.success("Server started on port 25565")
 }
