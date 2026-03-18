@@ -1,1 +1,1 @@
-rootProject.name = "slamblock"
+rootProject.name = "abyssNetwork"
