@@ -23,6 +23,8 @@ class playerLoaded(private val eventHandler: GlobalEventHandler, private val hea
             healthManagement.getHealthBar(player)?.let { player.showBossBar(it) }
             healthManagement.getShieldBar(player)?.let { player.showBossBar(it) }
             val teamTag: Tag<Boolean?>? = Tag.Boolean("teamTag")
+            val usingItem: Tag<Boolean?>? = Tag.Boolean("usingItem")
+            player.setTag(usingItem, false)
             if (player.getTag(teamTag) == true) {
                 player.addEffect(Potion(PotionEffect.GLOWING, 1, Integer.MAX_VALUE, Potion.INFINITE_DURATION))
                 var playerTeam = teamManager.getTeam("glow_blue")
