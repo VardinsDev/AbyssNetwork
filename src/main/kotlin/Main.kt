@@ -49,6 +49,9 @@ import io.github.cdimascio.dotenv.dotenv
 import net.hollowcube.polar.AnvilPolar
 import net.hollowcube.polar.PolarLoader
 import net.hollowcube.polar.PolarWriter
+import net.kyori.adventure.text.Component
+import net.minestom.server.event.server.ServerListPingEvent
+import net.minestom.server.ping.Status
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
@@ -204,6 +207,30 @@ fun main() {
     val manager = MinecraftServer.getCommandManager()
     manager.register(peaceTimeCommand())
 
+
+    MinecraftServer.getGlobalEventHandler()
+        .addListener<ServerListPingEvent?>(ServerListPingEvent::class.java) { event: ServerListPingEvent? ->
+            val onlinePlayers = MinecraftServer.getConnectionManager().onlinePlayers.size
+            var builder = Status.PlayerInfo.builder(Status.PlayerInfo.online(20))
+                .sample("The first line is seperated from the others")
+                .sample("Could be a name, or a message")
+            if (env["SERVER_MODE"] == "1") {
+                event?.setStatus(Status.builder().description(
+                    Component.text("Welcome to Abyss Network BUILD Server").color(
+                        NamedTextColor.DARK_PURPLE)).playerInfo(builder.build()).build())
+
+            } else if (env["SERVER_MODE"] == "2") {
+                event?.setStatus(Status.builder().description(
+                    Component.text("Welcome to Abyss Network DEV Server").color(
+                        NamedTextColor.DARK_PURPLE)).playerInfo(builder.build()).build())
+
+            } else {
+                event?.setStatus(Status.builder().description(
+                    Component.text("Welcome to Abyss Network Server").color(
+                        NamedTextColor.DARK_PURPLE)).playerInfo(builder.build()).build())
+
+            }
+        }
 
 
     //Join
