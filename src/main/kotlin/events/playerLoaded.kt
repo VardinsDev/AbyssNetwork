@@ -1,5 +1,6 @@
 package me.totxy.events
 
+import io.github.cdimascio.dotenv.dotenv
 import me.totxy.health.HealthManagement
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.text.Component
@@ -15,6 +16,7 @@ import net.minestom.server.tag.Tag
 class playerLoaded(private val eventHandler: GlobalEventHandler, private val healthManagement: HealthManagement) {
     fun register() {
         eventHandler.addListener(PlayerLoadedEvent::class.java) { event ->
+            val env = dotenv()
             val player = event.player
             val teamManager = MinecraftServer.getTeamManager()
             healthManagement.addHealthBar(player)
@@ -35,13 +37,23 @@ class playerLoaded(private val eventHandler: GlobalEventHandler, private val hea
             if (player.permissionLevel > 2) {
                 player.sendMessage(Component.text("Abyss | You have been opped!").color(NamedTextColor.DARK_PURPLE).decorate(TextDecoration.BOLD))
             }
-            val serverBar = BossBar.bossBar(
-                Component.text("You are on DEV SERVER!"),
-                1.0f,
-                BossBar.Color.GREEN,
-                BossBar.Overlay.PROGRESS
-            )
-            player.showBossBar(serverBar)
+            if (env["SERVER_MODE"] == "1") {
+                val serverBar = BossBar.bossBar(
+                    Component.text("You are on BUILD SERVER!"),
+                    1.0f,
+                    BossBar.Color.PURPLE,
+                    BossBar.Overlay.PROGRESS
+                )
+                player.showBossBar(serverBar)
+            } else if (env["SERVER_MODE"] == "2") {
+                val serverBar = BossBar.bossBar(
+                    Component.text("You are on DEV SERVER!"),
+                    1.0f,
+                    BossBar.Color.GREEN,
+                    BossBar.Overlay.PROGRESS
+                )
+                player.showBossBar(serverBar)
+            }
             MinecraftServer.getConnectionManager().onlinePlayers.forEach{ person ->
                 person.sendMessage(Component.text("Abyss | " + event.player.username + " has joined the server!").color(NamedTextColor.DARK_PURPLE).decorate(TextDecoration.BOLD))
             }
